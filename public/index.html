@@ -1,31 +1,85 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>A7-AI</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A7-AI | مساعدك الذكي</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#0b1020;color:#fff;min-height:100vh}
+header{padding:22px 15px;text-align:center;background:#151d33;border-bottom:1px solid #293653}
+header h1{margin:0;color:#38bdf8;font-size:30px}
+header p{color:#cbd5e1;margin-bottom:0}
+main{max-width:750px;margin:25px auto;padding:0 12px}
+.chat{background:#151d33;border:1px solid #293653;border-radius:18px;padding:14px}
+#messages{height:55vh;min-height:280px;overflow-y:auto;padding:10px}
+.message{padding:12px;margin:10px 0;border-radius:12px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7}
+.user{background:#075985}
+.ai{background:#27344e}
+.welcome{text-align:center;color:#cbd5e1;padding:35px 5px}
+form{display:flex;gap:8px}
+input{min-width:0;flex:1;padding:13px;border-radius:10px;border:1px solid #475569;background:#0b1020;color:#fff;font-size:16px}
+button{padding:12px 17px;border:0;border-radius:10px;background:#0284c7;color:#fff;font-size:16px;cursor:pointer}
+button:disabled{opacity:.5}
+.note{text-align:center;color:#94a3b8;font-size:12px;margin-top:15px}
+</style>
 </head>
 <body>
-  <header>
-    <h1>🤖 A7-AI</h1>
-    <p>مساعدك الذكي باللغة العربية</p>
-  </header>
+<header>
+<h1>🤖 A7-AI</h1>
+<p>مساعدك الذكي — جرّب واسأل براحتك</p>
+</header>
+<main>
+<section class="chat">
+<div id="messages">
+<p class="welcome">أهلاً بيك! 👋<br>أنا A7-AI، اكتب رسالتك وخلينا نتكلم.</p>
+</div>
+<form id="chat-form">
+<input id="message" placeholder="اكتب رسالتك هنا..." autocomplete="off" required>
+<button id="send" type="submit">إرسال</button>
+</form>
+</section>
+<p class="note">نسخة تجريبية للواجهة — الردود الحالية للتجربة وليست ذكاءً اصطناعيًا متصلًا.</p>
+</main>
+<script>
+const form=document.getElementById("chat-form");
+const input=document.getElementById("message");
+const messages=document.getElementById("messages");
+const send=document.getElementById("send");
 
-  <main>
-    <section class="chat">
-      <div id="messages">
-        <p class="welcome">أهلاً بيك! أنا A7-AI 👋</p>
-      </div>
+function addMessage(text,type){
+ const p=document.createElement("div");
+ p.className="message "+type;
+ p.textContent=text;
+ messages.appendChild(p);
+ messages.scrollTop=messages.scrollHeight;
+}
 
-      <form id="chat-form">
-        <input id="message" type="text"
-          placeholder="اكتب رسالتك هنا..." required>
-        <button type="submit">إرسال</button>
-      </form>
-    </section>
-  </main>
+form.addEventListener("submit",function(event){
+ event.preventDefault();
+ const text=input.value.trim();
+ if(!text)return;
+ const welcome=messages.querySelector(".welcome");
+ if(welcome)welcome.remove();
+ addMessage("أنت: "+text,"user");
+ input.value="";
+ send.disabled=true;
+ input.disabled=true;
 
-  <script src="script.js"></script>
+ setTimeout(function(){
+  let reply="وصلت رسالتك! دي نسخة تجريبية، ولسه محتاجين نوصلها بخدمة ذكاء اصطناعي عشان أقدر أجاوب على أسئلتك الحقيقية.";
+  const q=text.toLowerCase();
+  if(q.includes("السلام عليكم"))reply="وعليكم السلام ورحمة الله وبركاته! أهلاً بيك في A7-AI 😊";
+  else if(q.includes("اسمك"))reply="أنا A7-AI، مساعدك الذكي التجريبي 🤖";
+  else if(q.includes("عامل ايه")||q.includes("عامل إيه"))reply="الحمد لله! 😊 إنت عامل إيه؟";
+  else if(q.includes("اهلا")||q.includes("أهلا")||q.includes("مرحبا"))reply="أهلاً وسهلاً بيك! نورت A7-AI 👋";
+  addMessage("A7-AI: "+reply,"ai");
+  send.disabled=false;
+  input.disabled=false;
+  input.focus();
+ },500);
+});
+</script>
 </body>
 </html>
